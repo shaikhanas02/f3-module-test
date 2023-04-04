@@ -1,64 +1,70 @@
-// xnGT2Nn0hGpLixzCIB4cUIODwydy6icTWY5R2YfL
-let title = document.querySelector(".heading");
-let img1 = document.querySelector(".img");
-let pictureDetails = document.querySelector(".para");
-let searchDate = document.querySelector("#search-input");
-let btn = document.querySelector("#search");
-let searchResult= document.getElementById('search-result') ;
+const searchForm = document.getElementById("search-form");
+const searchInput = document.getElementById("search-input");
+const currentImageContainer = document.getElementById(
+  "current-image-container"
+);
+const currentImage = document.getElementById("current-image");
+const currentDetail = document.getElementById("current-detail");
+const searchHistory = document.getElementById("search-history");
+
 let searches = JSON.parse(localStorage.getItem("searches")) || [];
 
+searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const date = searchInput.value;
+    getImageOfTheDay(date);
+  });
 
-function getCurrentImageOfTheDay(){
-    let date = new Date().toISOString().split("T")[0];
-    console.log(date) ;
-    fetch(`https://api.nasa.gov/planetary/apod?api_key=xnGT2Nn0hGpLixzCIB4cUIODwydy6icTWY5R2YfL&date=${date}`)
-        .then((res) => {
-            return res.json();
-        })
-        .then((data) => {
-            console.log(data);
-            title.innerHTML = `<h1>NASA Picture of Day: ${data.date} </h1>`;
-            img1.innerHTML = `<img src="${data.hdurl}">`;
-            pictureDetails.innerHTML = `<h3>${data.title}</h3> <p> ${data.explanation} </p>`;
-        }) 
+function getCurrentImageOfTheDay() {
+  const currentDate = new Date().toISOString().split("T")[0];
+  const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=xnGT2Nn0hGpLixzCIB4cUIODwydy6icTWY5R2YfL&date=${currentDate}`;
+
+  fetch(apiUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      currentDetail.innerHTML = `<h2>${data.title}</h2><p>${data.explanation}</p>`;
+      currentImage.style.backgroundImage = `url(${data.url})`;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 getCurrentImageOfTheDay();
 
-btn.addEventListener('click', getImageOfTheDay);
-let newDate = searchDate.value;
+function getImageOfTheDay(date) {
+  const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=xnGT2Nn0hGpLixzCIB4cUIODwydy6icTWY5R2YfL&date=${date}`;
 
-function getImageOfTheDay(newDate){
+  fetch(apiUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      currentImage.style.backgroundImage = `url(${data.url})`;
+      currentDetail.innerHTML = `<h2>${data.title}</h2><p>${data.explanation}</p>`;
 
-    fetch(`https://api.nasa.gov/planetary/apod?api_key=xnGT2Nn0hGpLixzCIB4cUIODwydy6icTWY5R2YfL&date=${newDate}`)
-        .then((res) => {
-            return res.json();
-        })
-        .then((data) => {
-            console.log(data);
-            title.innerHTML = `<h1>NASA Picture of Day: ${data.date} </h1>`;
-            img1.innerHTML = `<img src="${data.hdurl}">`;
-            pictureDetails.innerHTML = `<h3>${data.title} </h3> <p> ${data.explanation} </p>`;
-        })
-        saveSearch(newDate) ;
-        addSearchToHistory() ;
+      saveSearch(date);
+      addSearchToHistory();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
-function saveSearch(newDate){
-    searches.push(newDate);
-    localStorage.setItem("searches", JSON.stringify(searches));
-
+function saveSearch(date) {
+  searches.push(date);
+  localStorage.setItem("searches", JSON.stringify(searches));
 }
+
 function addSearchToHistory() {
-    searchResult.innerHTML = "";
-  
-    for (let i = searches.length - 1; i >= 0; i--) {
-      const searchItem = document.createElement("li");
-      searchItem.innerText = searches[i];
+  searchHistory.innerHTML = "";
 
-      searchItem.addEventListener("click", () => {
-        getImageOfTheDay(searches[i]);
-      });
-      searchResult.appendChild(searchItem);
-    }
+  for (let i = searches.length - 1; i >= 0; i--) {
+    const Item = document.createElement("li");
+    Item.innerText = searches[i];
+    Item.addEventListener("click", () => {
+      getImageOfTheDay(searches[i]);
+    });
+    searchHistory.appendChild(Item);
   }
+}
+
+addSearchToHistory();

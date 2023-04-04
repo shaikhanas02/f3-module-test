@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA API</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="main">
-        <section id="current-image-container">
-            <div class="heading">
-            </div>
-            <div class="img">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NASA Picture of the Day</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-            </div>
-            <div class="para">
+  <body>
+    <header>
+      <h1>NASA Picture of the Day</h1>
+    </header>
 
-            </div>
-        </section>
-        <div id="search-form">
-            <h1>Get Image of the Day</h1>
-            <h4>Search a date: <input type="date" id="search-input">
-                <button id="search">Search</button>
-            </h4>
-        </div>
+    <main>
+        
+      <section id="current-image-container">
+        <h2>NASA</h2>
+        <div id="current-image"></div>
+        <div id="current-detail"></div>
+      </section>
+
+      <h3>Search for the Picture of the day</h3>
+      <form id="search-form">
+        <label for="search-input">Select a date:</label>
+        <input type="date" id="search-input" required />
+        <button type="submit">Search</button>
+      </form>
+
+      <section id="search-history-container">
         <h2>Previous Searches</h2>
-        <div id="search-result">
+        <ul id="search-history"></ul>
+      </section>
 
-        </div>
-    </div>
-    
+    </main>
+
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
